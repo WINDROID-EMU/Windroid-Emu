@@ -28,14 +28,14 @@
 
     <string name="full_screen">Полноэкранный режим</string>
     <string name="settings_title">Настройки</string>
-    <string name="settings_desc">Настроить MiceWine</string>
+    <string name="settings_desc">Настроить Windroid</string>
     <string name="app_close">Выход</string>
     <string name="log_title">Лог</string>
-    <string name="log_desc">Просмотреть лог MiceWine</string>
+    <string name="log_desc">Просмотреть лог Windroid</string>
     <string name="clear_log">Очистить</string>
     <string name="desktop_mode_init">Рабочий стол</string>
     <string name="about_title">О программе</string>
-    <string name="about_desc">О MiceWine</string>
+    <string name="about_desc">О Windroid</string>
     <string name="general_settings">Общие настройки</string>
     <string name="exit">Выход</string>
     <string name="open_keyboard">Открыть клавиатуру</string>
@@ -75,7 +75,7 @@
     <string name="dead_zone_title">Мертвая зона</string>
     <string name="mouse_sensibility_title">Чувствительность виртуальной мыши</string>
     <string name="open_close_virtual_controller">Открыть/Закрыть виртуальный контроллер</string>
-    <string name="welcome_text">Добро пожаловать в MiceWine!</string>
+    <string name="welcome_text">Добро пожаловать в Windroid!</string>
     <string name="continue_text">Продолжить</string>
     <string name="confirm_text">Подтвердить</string>
     <string name="get_file_permission_text">Разрешить доступ к файлам</string>

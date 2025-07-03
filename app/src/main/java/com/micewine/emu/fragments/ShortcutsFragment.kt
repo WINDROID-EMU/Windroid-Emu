@@ -22,6 +22,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
@@ -54,11 +55,8 @@ class ShortcutsFragment : Fragment() {
     private var binding: FragmentShortcutsBinding? = null
     private var rootView: View? = null
     private var appName: TextView? = null
-    private var searchItem: ImageButton? = null
-    private var backButton: ImageButton? = null
-    private var searchInput: TextInputEditText? = null
+    private var overflowMenuButton: ImageButton? = null
     private var itemTouchHelper: ItemTouchHelper? = null
-    private var imManager: InputMethodManager? = null
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreateView(
@@ -68,12 +66,8 @@ class ShortcutsFragment : Fragment() {
         rootView = binding!!.root
 
         recyclerView = rootView?.findViewById(R.id.recyclerViewGame)
-
         appName = rootView?.findViewById(R.id.appName)
-        searchItem = rootView?.findViewById(R.id.searchItem)
-        backButton = rootView?.findViewById(R.id.backButton)
-        searchInput = rootView?.findViewById(R.id.searchInput)
-        imManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        overflowMenuButton = rootView?.findViewById(R.id.overflowMenuButton)
 
         initialize()
 
@@ -87,52 +81,32 @@ class ShortcutsFragment : Fragment() {
             GridSpacingItemDecoration(10)
         )
 
-        searchItem?.setOnClickListener {
-            searchItem?.visibility = View.GONE
-            appName?.visibility = View.GONE
-
-            searchInput?.setText("")
-            searchInput?.visibility = View.VISIBLE
-            searchInput?.requestFocus()
-            imManager?.showSoftInput(searchInput, 0)
-
-            backButton?.visibility = View.VISIBLE
-        }
-
-        backButton?.setOnClickListener {
-            searchItem?.visibility = View.VISIBLE
-            appName?.visibility = View.VISIBLE
-
-            searchInput?.visibility = View.GONE
-            backButton?.visibility = View.GONE
-
-            imManager?.hideSoftInputFromWindow(requireActivity().window.decorView.windowToken, 0)
-
-            (recyclerView?.adapter as? AdapterGame)?.filterList("")
-        }
-
-        searchInput?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                (recyclerView?.adapter as? AdapterGame)?.filterList(p0.toString())
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-            }
-
-        })
-
         setAdapter()
         setupDragAndDrop()
 
         registerForContextMenu(recyclerView!!)
 
+        overflowMenuButton?.setOnClickListener {
+            val popup = PopupMenu(requireContext(), overflowMenuButton!!)
+            popup.menuInflater.inflate(R.menu.toolbar_menu, popup.menu)
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_settings -> {
+                        (activity as? MainActivity)?.switchToFragment(1)
+                        true
+                    }
+                    R.id.menu_file_manager -> {
+                        (activity as? MainActivity)?.switchToFragment(2)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popup.show()
+        }
+
         return rootView
     }
-
-
 
     private fun setupDragAndDrop() {
         val callback = object : ItemTouchHelper.Callback() {

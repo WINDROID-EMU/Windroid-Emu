@@ -23,8 +23,8 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:theme="@style/Theme.MiceWine"
+        android:visibility="gone"
         app:labelVisibilityMode="selected"
-        app:menu="@menu/bottom_nav_menu">
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+        app:menu="@menu/bottom_nav_menu"></com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </LinearLayout>

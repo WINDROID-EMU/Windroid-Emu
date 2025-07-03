@@ -29,15 +29,15 @@
 
     <string name="full_screen">全屏</string>
     <string name="settings_title">设置</string>
-    <string name="settings_desc">配置 MiceWine</string>
+    <string name="settings_desc">配置 Windroid</string>
     <string name="app_close">退出</string>
     <string name="log_title">日志</string>
-    <string name="log_desc">查看 MiceWine 日志</string>
+    <string name="log_desc">查看 Windroid 日志</string>
     <string name="clear_log">清除</string>
     <string name="desktop_mode_init">桌面模式</string>
     <string name="about_title">关于</string>
     <string name="home_title">主页</string>
-    <string name="about_desc">关于 MiceWine</string>
+    <string name="about_desc">关于 Windroid</string>
     <string name="general_settings">常规设置</string>
     <string name="exit">退出</string>
     <string name="open_keyboard">打开键盘</string>
@@ -78,7 +78,7 @@
     <string name="mouse_sensibility_title">虚拟鼠标灵敏度</string>
     <string name="dead_zone_title">死区</string>
     <string name="open_close_virtual_controller">打开/关闭虚拟控制器</string>
-    <string name="welcome_text">欢迎使用 MiceWine！</string>
+    <string name="welcome_text">欢迎使用 Windroid！</string>
     <string name="continue_text">继续</string>
     <string name="confirm_text">确认</string>
     <string name="get_file_permission_text">请允许文件管理权限</string>

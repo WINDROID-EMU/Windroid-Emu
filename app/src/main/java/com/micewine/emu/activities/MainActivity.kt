@@ -521,20 +521,11 @@ class MainActivity : AppCompatActivity() {
                     viewPager?.currentItem = 0
                     updateShortcuts()
                 }
-                R.id.nav_settings -> {
-                    selectedFragmentId = 1
-                    viewPager?.currentItem = 1
-                }
-                R.id.nav_file_manager -> {
-                    selectedFragmentId = 2
-                    viewPager?.currentItem = 2
-                }
                 R.id.nav_about -> {
                     selectedFragmentId = 3
                     viewPager?.currentItem = 3
                 }
             }
-
             true
         }
 
@@ -577,7 +568,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_settings -> {
+                selectedFragmentId = 1
+                viewPager?.currentItem = 1
+                return true
+            }
+            R.id.menu_file_manager -> {
+                selectedFragmentId = 2
+                viewPager?.currentItem = 2
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -987,6 +995,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun switchToFragment(index: Int) {
+        selectedFragmentId = index
+        viewPager?.currentItem = index
     }
 
     companion object {

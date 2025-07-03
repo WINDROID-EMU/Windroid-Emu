@@ -26,14 +26,13 @@
         </TextView>
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/searchItem"
+            android:id="@+id/overflowMenuButton"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center|end"
             android:layout_marginEnd="8dp"
             style="@style/Widget.Material3.Button.TextButton"
-            android:src="@drawable/ic_search">
-        </androidx.appcompat.widget.AppCompatImageButton>
+            android:src="@drawable/ic_more_vert" />
 
     </LinearLayout>
 
