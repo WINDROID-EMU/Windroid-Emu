@@ -1,8 +1,8 @@
-![MiceWine Logo](logo.png "MiceWine Logo")
+![Windroid Logo](logo.png "Windroid Logo")
 
-### MiceWine Emulator
+### Windroid Emulator
 
-MiceWine is a project that aims to run Windows applications and games on Android smartphones.
+Windroid is a project that aims to run Windows applications and games on Android smartphones.
 
 It uses a customized build of Wine compiled for Android and Box64 to run in the best possible way.
 
@@ -42,7 +42,7 @@ Actually in constant development.
 
 ### Controller Support
 
-MiceWine Supports Up To 4 Physical Controllers. With XInput and DInput Automatic Mapping.
+Windroid Supports Up To 4 Physical Controllers. With XInput and DInput Automatic Mapping.
 
 Any Xbox Like Controller May Works.
 
@@ -52,7 +52,7 @@ Tested with Ipega 9021s, Ipega 9078, Altomex AL-G7, Xbox One Controller, Xbox Se
 
 ### Keyboard and Mouse Support
 
-MiceWine Should Work Out of Box with Any QWERTY ABNT2 Keyboard and Mouse.
+Windroid Should Work Out of Box with Any QWERTY ABNT2 Keyboard and Mouse.
 
 When Mouse is Captured Press Alt+Q on Keyboard to Release or Press Back on Device.
 
@@ -61,7 +61,7 @@ When Mouse is Captured Press Alt+Q on Keyboard to Release or Press Back on Devic
 ### RootFS Download
 
 You can download the required **RootFS** file from this repository:  
-- [MiceWine RootFS Generator](https://github.com/KreitinnSoftware/MiceWine-RootFS-Generator)
+- [Windroid RootFS Generator](https://github.com/KreitinnSoftware/Windroid-RootFS-Generator)
 
 ---
 
