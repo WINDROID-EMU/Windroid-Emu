@@ -12,6 +12,7 @@ import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -42,6 +43,7 @@ import com.micewine.emu.fragments.ShortcutsFragment.Companion.getWineServices
 import com.micewine.emu.fragments.ShortcutsFragment.Companion.getWineVirtualDesktop
 import java.io.File
 import kotlin.math.roundToInt
+import java.text.DecimalFormat
 
 
 class AdapterGame(
@@ -142,61 +144,127 @@ class AdapterGame(
 
         override fun onClick(v: View) {
             val gameModel = gameList[adapterPosition]
-
             selectedGameName = gameModel.name
 
-            val exeFile = File(gameModel.exePath)
-            var exePath = gameModel.exePath
-            var exeArguments = gameModel.exeArguments
+            val dialogView = LayoutInflater.from(activity).inflate(R.layout.custom_game_popup, null)
+            val iconView = dialogView.findViewById<ImageView>(R.id.game_icon)
+            val nameView = dialogView.findViewById<TextView>(R.id.game_name)
+            val sizeView = dialogView.findViewById<TextView>(R.id.game_size)
+            val btnPlay = dialogView.findViewById<Button>(R.id.btn_play)
+            val btnSettings = dialogView.findViewById<Button>(R.id.btn_settings)
+            val btnDelete = dialogView.findViewById<Button>(R.id.btn_delete)
 
-            if (!exeFile.exists()) {
-                if (exeFile.path == activity.getString(R.string.desktop_mode_init)) {
-                    exePath = ""
-                    exeArguments = ""
-                } else {
-                    activity.runOnUiThread {
-                        Toast.makeText(activity, activity.getString(R.string.executable_file_not_found), Toast.LENGTH_SHORT).show()
-                    }
-
-                    EditGamePreferencesFragment(EDIT_GAME_PREFERENCES).show(activity.supportFragmentManager, "")
-                    return
+            // Set icon
+            val imageFile = File(gameModel.iconPath)
+            if (imageFile.exists() && imageFile.length() > 0) {
+                val imageBitmap = BitmapFactory.decodeFile(gameModel.iconPath)
+                if (imageBitmap != null) {
+                    iconView.setImageBitmap(imageBitmap)
                 }
+            } else {
+                iconView.setImageResource(R.drawable.default_icon)
             }
 
-            val intent = Intent(activity, EmulationActivity::class.java)
+            // Set name
+            nameView.text = gameModel.name
 
-            var driverName = getVulkanDriver(selectedGameName)
-            if (driverName == "Global") {
-                driverName = preferences?.getString(SELECTED_VULKAN_DRIVER, "").toString()
+            // Set size
+            val exeFile = File(gameModel.exePath)
+            val gameDir = exeFile.parentFile
+            val sizeText = if (gameDir != null && gameDir.exists()) {
+                val totalBytes = getFolderSize(gameDir)
+                formatSize(totalBytes)
+            } else {
+                activity.getString(R.string.empty_text)
             }
-            var box64Version = getBox64Version(selectedGameName)
-            if (box64Version == "Global") {
-                box64Version = preferences?.getString(SELECTED_BOX64, "").toString()
+            sizeView.text = sizeText
+
+            // Hide delete for desktop shortcut
+            val isDesktopShortcut = gameModel.name == activity.getString(R.string.desktop_mode_init)
+            btnDelete.visibility = if (isDesktopShortcut) View.GONE else View.VISIBLE
+
+            val dialog = androidx.appcompat.app.AlertDialog.Builder(activity, R.style.Theme_MiceWine)
+                .setView(dialogView)
+                .create()
+
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            dialog.setOnShowListener {
+                val window = dialog.window
+                window?.setLayout(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                window?.setGravity(android.view.Gravity.CENTER)
             }
 
-            val driverType = if (driverName.startsWith("AdrenoToolsDriver-")) ADRENO_TOOLS_DRIVER else MESA_DRIVER
-
-            val runWineIntent = Intent(ACTION_RUN_WINE).apply {
-                putExtra("exePath", exePath)
-                putExtra("exeArguments", exeArguments)
-                putExtra("driverName", driverName)
-                putExtra("driverType", driverType)
-                putExtra("box64Version", box64Version)
-                putExtra("box64Preset", getBox64Preset(selectedGameName))
-                putExtra("displayResolution", getDisplaySettings(selectedGameName)[1])
-                putExtra("virtualControllerPreset", getSelectedVirtualControllerPreset(selectedGameName))
-                putExtra("d3dxRenderer", getD3DXRenderer(selectedGameName))
-                putExtra("wineD3D", getWineD3DVersion(selectedGameName))
-                putExtra("dxvk", getDXVKVersion(selectedGameName))
-                putExtra("vkd3d", getVKD3DVersion(selectedGameName))
-                putExtra("esync", getWineESync(selectedGameName))
-                putExtra("services", getWineServices(selectedGameName))
-                putExtra("virtualDesktop", getWineVirtualDesktop(selectedGameName))
-                putExtra("cpuAffinity", getCpuAffinity(selectedGameName))
+            btnPlay.setOnClickListener {
+                var exePath = gameModel.exePath
+                var exeArguments = gameModel.exeArguments
+                if (!exeFile.exists()) {
+                    if (exeFile.path == activity.getString(R.string.desktop_mode_init)) {
+                        exePath = ""
+                        exeArguments = ""
+                    } else {
+                        activity.runOnUiThread {
+                            Toast.makeText(activity, activity.getString(R.string.executable_file_not_found), Toast.LENGTH_SHORT).show()
+                        }
+                        com.micewine.emu.fragments.EditGamePreferencesFragment(com.micewine.emu.fragments.EditGamePreferencesFragment.EDIT_GAME_PREFERENCES).show(activity.supportFragmentManager, "")
+                        dialog.dismiss()
+                        return@setOnClickListener
+                    }
+                }
+                val intent = Intent(activity, com.micewine.emu.activities.EmulationActivity::class.java)
+                var driverName = getVulkanDriver(selectedGameName)
+                if (driverName == "Global") {
+                    driverName = preferences?.getString(com.micewine.emu.activities.GeneralSettingsActivity.SELECTED_VULKAN_DRIVER, "").toString()
+                }
+                var box64Version = getBox64Version(selectedGameName)
+                if (box64Version == "Global") {
+                    box64Version = preferences?.getString(com.micewine.emu.activities.GeneralSettingsActivity.SELECTED_BOX64, "").toString()
+                }
+                val driverType = if (driverName.startsWith("AdrenoToolsDriver-")) ADRENO_TOOLS_DRIVER else MESA_DRIVER
+                val runWineIntent = Intent(ACTION_RUN_WINE).apply {
+                    putExtra("exePath", exePath)
+                    putExtra("exeArguments", exeArguments)
+                    putExtra("driverName", driverName)
+                    putExtra("driverType", driverType)
+                    putExtra("box64Version", box64Version)
+                    putExtra("box64Preset", getBox64Preset(selectedGameName))
+                    putExtra("displayResolution", getDisplaySettings(selectedGameName)[1])
+                    putExtra("virtualControllerPreset", getSelectedVirtualControllerPreset(selectedGameName))
+                    putExtra("d3dxRenderer", getD3DXRenderer(selectedGameName))
+                    putExtra("wineD3D", getWineD3DVersion(selectedGameName))
+                    putExtra("dxvk", getDXVKVersion(selectedGameName))
+                    putExtra("vkd3d", getVKD3DVersion(selectedGameName))
+                    putExtra("esync", getWineESync(selectedGameName))
+                    putExtra("services", getWineServices(selectedGameName))
+                    putExtra("virtualDesktop", getWineVirtualDesktop(selectedGameName))
+                    putExtra("cpuAffinity", getCpuAffinity(selectedGameName))
+                }
+                activity.sendBroadcast(runWineIntent)
+                activity.startActivity(intent)
+                dialog.dismiss()
             }
 
-            activity.sendBroadcast(runWineIntent)
-            activity.startActivity(intent)
+            btnSettings.setOnClickListener {
+                com.micewine.emu.fragments.EditGamePreferencesFragment(com.micewine.emu.fragments.EditGamePreferencesFragment.EDIT_GAME_PREFERENCES).show(activity.supportFragmentManager, "")
+                dialog.dismiss()
+            }
+
+            btnDelete.setOnClickListener {
+                // Confirmação antes de excluir
+                androidx.appcompat.app.AlertDialog.Builder(activity, R.style.Theme_MiceWine)
+                    .setTitle(R.string.remove_game_item)
+                    .setMessage(R.string.remove_game_item_warning)
+                    .setPositiveButton(R.string.confirm_text) { _, _ ->
+                        com.micewine.emu.fragments.DeleteItemFragment(com.micewine.emu.fragments.DeleteItemFragment.DELETE_GAME_ITEM).show(activity.supportFragmentManager, "")
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(R.string.cancel_text, null)
+                    .show()
+            }
+
+            dialog.show()
         }
 
         override fun onLongClick(v: View): Boolean {
@@ -237,5 +305,31 @@ class AdapterGame(
 
     companion object {
         var selectedGameName = ""
+
+        // Calcula o tamanho total da pasta recursivamente
+        fun getFolderSize(dir: File): Long {
+            if (!dir.exists()) return 0L
+            if (dir.isFile) return dir.length()
+            var size = 0L
+            dir.listFiles()?.forEach { file ->
+                size += if (file.isFile) file.length() else getFolderSize(file)
+            }
+            return size
+        }
+
+        // Formata o tamanho para MB/GB
+        fun formatSize(bytes: Long): String {
+            if (bytes <= 0) return "0 MB"
+            val df = DecimalFormat("#.##")
+            val kb = bytes / 1024.0
+            val mb = kb / 1024.0
+            val gb = mb / 1024.0
+            return when {
+                gb >= 1 -> df.format(gb) + " GB"
+                mb >= 1 -> df.format(mb) + " MB"
+                kb >= 1 -> df.format(kb) + " KB"
+                else -> "$bytes B"
+            }
+        }
     }
 }

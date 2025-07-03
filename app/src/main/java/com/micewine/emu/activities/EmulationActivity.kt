@@ -27,6 +27,7 @@ import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
@@ -270,6 +271,14 @@ class EmulationActivity : AppCompatActivity(), View.OnApplyWindowInsetsListener 
             }
             findViewById<MaterialButton>(R.id.openTaskMgr).setOnClickListener {
                 TaskManagerFragment().show(supportFragmentManager, "")
+            }
+            findViewById<MaterialButton>(R.id.displayOptionsButton).setOnClickListener {
+                val group = findViewById<LinearLayout>(R.id.displayOptionsGroup)
+                group.visibility = if (group.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+            }
+            findViewById<MaterialButton>(R.id.controlOptionsButton).setOnClickListener {
+                val group = findViewById<LinearLayout>(R.id.controlOptionsGroup)
+                group.visibility = if (group.visibility == View.VISIBLE) View.GONE else View.VISIBLE
             }
         }
 

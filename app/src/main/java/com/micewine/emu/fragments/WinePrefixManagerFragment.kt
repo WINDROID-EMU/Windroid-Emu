@@ -83,7 +83,7 @@ class WinePrefixManagerFragment : Fragment() {
                 val driveC = File("$winePrefix/drive_c")
                 val wineUtils = File("$appRootDir/wine-utils")
                 val startMenu = File("$driveC/ProgramData/Microsoft/Windows/Start Menu")
-                val userSharedFolder = File("/storage/emulated/0/MiceWine")
+                val userSharedFolder = File("/storage/emulated/0/Windroid")
                 val isProton = File("$driveC/users/steamuser").exists()
 
                 val wineUserDir: File = if (isProton) {
