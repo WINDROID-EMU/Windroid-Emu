@@ -252,15 +252,22 @@ class VirtualControllerInputView @JvmOverloads constructor(
         }
         rightTouchPad.let {
             paint.style = Paint.Style.STROKE
-            canvas.drawRoundRect(
-                it.x - it.radius / 2,
-                it.y - it.radius / 2,
-                it.x + it.radius / 2,
-                it.y + it.radius / 2,
-                32F,
-                32F,
-                paint
-            )
+            canvas.drawCircle(it.x, it.y, it.radius / 2, paint)
+
+            var analogX = it.x + it.fingerX
+            var analogY = it.y + it.fingerY
+
+            val distSquared = (it.fingerX * it.fingerX) + (it.fingerY * it.fingerY)
+            val maxDist = (it.radius / 4) * (it.radius / 4)
+
+            if (distSquared > maxDist) {
+                val scale = (it.radius / 4) / sqrt(distSquared)
+                analogX = it.x + (it.fingerX * scale)
+                analogY = it.y + (it.fingerY * scale)
+            }
+
+            paint.style = Paint.Style.FILL
+            canvas.drawCircle(analogX, analogY, it.radius / 4, paint)
         }
         dpad.let {
             canvas.apply {
@@ -354,14 +361,22 @@ class VirtualControllerInputView @JvmOverloads constructor(
                         it.fingerX = posX
                         it.fingerY = posY
 
-                        axisToByteArray(connectedVirtualControllers[virtualXInputControllerId].lx, normalizeAxisValue(posX / (it.radius / 4)))
-                        axisToByteArray(connectedVirtualControllers[virtualXInputControllerId].ly, normalizeAxisValue(-posY / (it.radius / 4)))
+                        val maxDist = it.radius / 4
+                        var normX = posX / maxDist
+                        var normY = posY / maxDist
+                        val magnitude = sqrt(normX * normX + normY * normY)
+                        if (magnitude > 1f) {
+                            normX /= magnitude
+                            normY /= magnitude
+                        }
+                        axisToByteArray(connectedVirtualControllers[virtualXInputControllerId].lx, normalizeAxisValue(normX))
+                        axisToByteArray(connectedVirtualControllers[virtualXInputControllerId].ly, normalizeAxisValue(-normY))
 
                         return@let
                     }
                 }
                 rightTouchPad.let {
-                    if (detectClick(event, event.actionIndex, it.x, it.y, it.radius, SHAPE_SQUARE)) {
+                    if (detectClick(event, event.actionIndex, it.x, it.y, it.radius, SHAPE_CIRCLE)) {
                         it.isPressed = true
                         it.fingerId = event.getPointerId(event.actionIndex)
                     }
@@ -423,21 +438,36 @@ class VirtualControllerInputView @JvmOverloads constructor(
 
                             isFingerPressingButton = true
 
-                            axisToByteArray(connectedVirtualControllers[virtualXInputControllerId].lx, normalizeAxisValue(posX / (it.radius / 4)))
-                            axisToByteArray(connectedVirtualControllers[virtualXInputControllerId].ly, normalizeAxisValue(-posY / (it.radius / 4)))
+                            val maxDist = it.radius / 4
+                            var normX = posX / maxDist
+                            var normY = posY / maxDist
+                            val magnitude = sqrt(normX * normX + normY * normY)
+                            if (magnitude > 1f) {
+                                normX /= magnitude
+                                normY /= magnitude
+                            }
+                            axisToByteArray(connectedVirtualControllers[virtualXInputControllerId].lx, normalizeAxisValue(normX))
+                            axisToByteArray(connectedVirtualControllers[virtualXInputControllerId].ly, normalizeAxisValue(-normY))
                         }
                     }
                     rightTouchPad.let {
                         if (it.isPressed && it.fingerId == event.getPointerId(i)) {
-                            if (event.historySize > 0) {
-                                val dx = event.getX(i) - event.getHistoricalX(i, event.historySize - 1)
-                                val dy = event.getY(i) - event.getHistoricalY(i, event.historySize - 1)
+                            val posX = event.getX(i) - it.x
+                            val posY = event.getY(i) - it.y
 
-                                isFingerPressingButton = true
+                            it.fingerX = posX
+                            it.fingerY = posY
 
-                                axisToByteArray(connectedVirtualControllers[virtualXInputControllerId].rx, ((dx + 0.5F) * 255F).toInt())
-                                axisToByteArray(connectedVirtualControllers[virtualXInputControllerId].ry, ((-dy + 0.5F) * 255F).toInt())
+                            val maxDist = it.radius / 4
+                            var normX = posX / maxDist
+                            var normY = posY / maxDist
+                            val magnitude = sqrt(normX * normX + normY * normY)
+                            if (magnitude > 1f) {
+                                normX /= magnitude
+                                normY /= magnitude
                             }
+                            axisToByteArray(connectedVirtualControllers[virtualXInputControllerId].rx, normalizeAxisValue(normX))
+                            axisToByteArray(connectedVirtualControllers[virtualXInputControllerId].ry, normalizeAxisValue(-normY))
                         }
                     }
                     dpad.let {
@@ -501,6 +531,8 @@ class VirtualControllerInputView @JvmOverloads constructor(
                 rightTouchPad.let {
                     if (it.fingerId == event.getPointerId(event.actionIndex)) {
                         it.fingerId = -1
+                        it.fingerX = 0F
+                        it.fingerY = 0F
                         it.isPressed = false
 
                         axisToByteArray(connectedVirtualControllers[virtualXInputControllerId].rx, 127)
@@ -538,6 +570,8 @@ class VirtualControllerInputView @JvmOverloads constructor(
                 }
                 rightTouchPad.let {
                     it.fingerId = -1
+                    it.fingerX = 0F
+                    it.fingerY = 0F
                     it.isPressed = false
 
                     axisToByteArray(connectedVirtualControllers[virtualXInputControllerId].rx, 127)
@@ -646,6 +680,8 @@ class VirtualControllerInputView @JvmOverloads constructor(
         var radius: Float,
         var isPressed: Boolean = false,
         var fingerId: Int = 0,
+        var fingerX: Float = 0F,
+        var fingerY: Float = 0F
     )
 
     companion object {

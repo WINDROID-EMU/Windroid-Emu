@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.micewine.emu"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.micewine.emu"
@@ -86,21 +86,21 @@ android {
 dependencies {
     implementation("com.google.android.flexbox:flexbox:3.0.0")
     implementation("net.lingala.zip4j:zip4j:2.11.5")
-    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
     implementation("com.google.android.material:material:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1")
     implementation("androidx.preference:preference-ktx:1.2.1")
-    implementation("org.apache.commons:commons-compress:1.26.1")
-    implementation("androidx.core:core-ktx:1.15.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.8.9")
-    implementation("androidx.navigation:navigation-ui-ktx:2.8.9")
+    implementation("org.apache.commons:commons-compress:1.27.1")
+    implementation("androidx.core:core-ktx:1.16.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.9.1")
+    implementation("androidx.navigation:navigation-ui-ktx:2.9.1")
     implementation("androidx.activity:activity-ktx:1.10.1")
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.code.gson:gson:2.13.1")
     implementation("com.github.vatbub:mslinks:1.0.6.2")
     implementation("com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:1.0.0")
     implementation("com.getkeepsafe.taptargetview:taptargetview:1.15.0")
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }
 
 fun getGitShortSHA(): String {
