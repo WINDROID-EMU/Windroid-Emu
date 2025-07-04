@@ -802,7 +802,7 @@ class MainActivity : AppCompatActivity() {
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
                         // Wait for Wine Successfully Start and Execute window_handler and Kill Services
-                        WineWrapper.waitForProcess("window_handler.exe")
+                        WineWrapper.waitForProcessAsync("window_handler.exe")
 
                         runCommand("pkill -9 services.exe", false)
                     }

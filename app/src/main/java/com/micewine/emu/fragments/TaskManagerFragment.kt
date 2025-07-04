@@ -34,9 +34,7 @@ class TaskManagerFragment : DialogFragment() {
 
         lifecycleScope.launch(Dispatchers.Default) {
             while (true) {
-                val newList = withContext(Dispatchers.IO) {
-                    WineWrapper.getExeProcesses()
-                }
+                val newList = WineWrapper.getExeProcessesAsync()
 
                 withContext(Dispatchers.Main) {
                     processList.clear()

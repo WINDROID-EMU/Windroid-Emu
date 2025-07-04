@@ -12,9 +12,15 @@ import com.micewine.emu.core.ShellLoader.runCommandWithOutput
 import com.micewine.emu.fragments.DebugSettingsFragment.Companion.availableCPUs
 import java.io.File
 import kotlin.math.abs
+import kotlinx.coroutines.withContext
 
 object WineWrapper {
     private var IS_BOX64 = if (deviceArch == "x86_64") "" else "box64"
+
+    // Cache simples com tempo de expiração
+    private var cachedProcesses: List<ExeProcess>? = null
+    private var lastCacheTime: Long = 0
+    private const val CACHE_DURATION_MS = 2000 // 2 segundos
 
     fun getCpuHexMask(cpuAffinityMask: String = selectedCpuAffinity!!): String {
         val availCpus = Runtime.getRuntime().availableProcessors()
@@ -39,13 +45,16 @@ object WineWrapper {
         return affinity
     }
 
+    suspend fun waitForProcessAsync(name: String) {
+        while (true) {
+            val wineProcesses = getExeProcessesAsync()
+            if (wineProcesses.firstOrNull { it.name == name } != null) break
+            kotlinx.coroutines.delay(125)
+        }
+    }
 
     fun waitForProcess(name: String) {
-        while (true) {
-            val wineProcesses = getExeProcesses()
-            if (wineProcesses.firstOrNull { it.name == name } != null) break
-            Thread.sleep(125)
-        }
+        kotlinx.coroutines.runBlocking { waitForProcessAsync(name) }
     }
 
     fun wine(args: String) {
@@ -157,12 +166,16 @@ object WineWrapper {
         return "0"
     }
 
-    fun getExeProcesses(): List<ExeProcess> {
+    suspend fun getExeProcessesAsync(forceRefresh: Boolean = false): List<ExeProcess> = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+        val now = System.currentTimeMillis()
+        if (!forceRefresh && cachedProcesses != null && (now - lastCacheTime) < CACHE_DURATION_MS) {
+            return@withContext cachedProcesses!!
+        }
         val exeProcesses = mutableListOf<ExeProcess>()
-        File("/proc").listFiles()?.forEach {
+        java.io.File("/proc").listFiles()?.forEach {
             val unixPid = it.name.toIntOrNull()
             if (it.isDirectory && unixPid != null) {
-                val cmdlineFile = File(it, "cmdline")
+                val cmdlineFile = java.io.File(it, "cmdline")
                 if (cmdlineFile.exists()) {
                     val cmdline = cmdlineFile.readText().trim()
                     val processName = cmdline.split("\u0000").firstOrNull()
@@ -182,7 +195,15 @@ object WineWrapper {
                 }
             }
         }
-        return exeProcesses
+        cachedProcesses = exeProcesses
+        lastCacheTime = now
+        return@withContext exeProcesses
+    }
+
+    // Mantém o método antigo para compatibilidade, mas recomenda-se migrar para o novo
+    fun getExeProcesses(): List<ExeProcess> {
+        // Chama a versão assíncrona de forma bloqueante para manter compatibilidade
+        return kotlinx.coroutines.runBlocking { getExeProcessesAsync() }
     }
 
     class ExeProcess(
