@@ -92,6 +92,51 @@ class AdapterSettings(private val settingsList: List<SettingsList>, private val 
                     val intent = Intent(context, ControllerTestActivity::class.java)
                     context.startActivity(intent)
                 }
+                context.getString(R.string.controls_settings_title) -> {
+                    val intent = Intent(context, com.micewine.emu.activities.ControlsSettingsActivity::class.java)
+                    context.startActivity(intent)
+                }
+                context.getString(R.string.wine_settings_group_title) -> {
+                    val intent = Intent(context, com.micewine.emu.activities.WineSettingsGroupActivity::class.java)
+                    context.startActivity(intent)
+                }
+                context.getString(R.string.wine_settings_title) -> {
+                    val intent = Intent(context, com.micewine.emu.activities.WineSettingsActivity::class.java)
+                    context.startActivity(intent)
+                }
+                context.getString(R.string.drivers_settings_group_title) -> {
+                    val intent = Intent(context, com.micewine.emu.activities.DriversSettingsGroupActivity::class.java)
+                    context.startActivity(intent)
+                }
+                context.getString(R.string.rat_packages_settings_title) -> {
+                    val intent = Intent(context, com.micewine.emu.activities.RatPackagesSettingsActivity::class.java)
+                    context.startActivity(intent)
+                }
+                context.getString(R.string.driver_settings_title) -> {
+                    val intent = Intent(context, GeneralSettingsActivity::class.java)
+                    intent.putExtra("openFragment", "drivers")
+                    context.startActivity(intent)
+                }
+                context.getString(R.string.driver_info_title) -> {
+                    val intent = Intent(context, GeneralSettingsActivity::class.java)
+                    intent.putExtra("openFragment", "driver_info")
+                    context.startActivity(intent)
+                }
+                context.getString(R.string.debug_settings_title) -> {
+                    val intent = Intent(context, GeneralSettingsActivity::class.java)
+                    intent.putExtra("openFragment", "debug")
+                    context.startActivity(intent)
+                }
+                context.getString(R.string.sound_settings_title) -> {
+                    val intent = Intent(context, GeneralSettingsActivity::class.java)
+                    intent.putExtra("openFragment", "sound")
+                    context.startActivity(intent)
+                }
+                context.getString(R.string.env_settings_title) -> {
+                    val intent = Intent(context, GeneralSettingsActivity::class.java)
+                    intent.putExtra("openFragment", "env")
+                    context.startActivity(intent)
+                }
                 else -> {
                     val intent = Intent(ACTION_PREFERENCE_SELECT).apply {
                         putExtra("preference", settingsModel.titleSettings)

@@ -68,6 +68,8 @@
     <string name="box64_settings_desc">Configure Box64</string>
     <string name="wine_settings_title">Wine Settings</string>
     <string name="wine_settings_desc">Configure Wine</string>
+    <string name="wine_settings_group_title">Configurações da Wine</string>
+    <string name="wine_settings_group_desc">Configurações do Wine e Prefixo Wine</string>
     <string name="display_settings_title">Display Settings</string>
     <string name="display_settings_desc">Configure Display</string>
     <string name="driver_settings_title">Drivers Settings</string>
@@ -193,8 +195,8 @@
     <string name="installing_drivers">Installing Drivers…</string>
     <string name="installing_box64">Installing Box64…</string>
     <string name="installing_wine">Installing Wine…</string>
-    <string name="box64_preset_manager_title">Box64 Preset Manager</string>
-    <string name="box64_preset_manager_desc">Manage Box64 Presets</string>
+    <string name="box64_preset_manager_title">Box64 Settings</string>
+    <string name="box64_preset_manager_desc">Manage Box64 Settings</string>
     <string name="selected_box64_profile">Selected Box64 Profile</string>
     <string name="selected_virtual_controller_profile">Selected Virtual Controller Profile</string>
     <string name="selected_controller_profile">Selected Controller Profile</string>
@@ -245,4 +247,10 @@
     <string name="task_manager">Task Manager</string>
     <string name="display_options">Tela</string>
     <string name="control_options">Controles</string>
+    <string name="controls_settings_title">Configurações dos Controles</string>
+    <string name="controls_settings_desc">Configurações de todos os controles</string>
+    <string name="drivers_settings_group_title">Configurações de Vídeo</string>
+    <string name="drivers_settings_group_desc">Configurações e informações de vídeo</string>
+    <string name="rat_packages_settings_title">Configurações de Pacotes</string>
+    <string name="rat_packages_settings_desc">Gerenciar e baixar pacotes RAT</string>
 </resources>

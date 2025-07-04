@@ -33,12 +33,10 @@ class GeneralSettingsFragment : Fragment() {
 
         settingsList.clear()
 
-        addToAdapter(R.string.debug_settings_title, R.string.debug_settings_desc, R.drawable.ic_settings_outline)
-        addToAdapter(R.string.sound_settings_title, R.string.sound_settings_desc, R.drawable.ic_sound)
-        addToAdapter(R.string.driver_settings_title, R.string.driver_settings_desc, R.drawable.ic_gpu)
-        addToAdapter(R.string.driver_info_title, R.string.driver_info_desc, R.drawable.ic_gpu)
-        addToAdapter(R.string.env_settings_title, R.string.env_settings_desc, R.drawable.ic_globe)
-        addToAdapter(R.string.wine_settings_title, R.string.wine_settings_desc, R.drawable.ic_wine)
+        // Configurações movidas para a tela principal de configurações
+        // addToAdapter(R.string.debug_settings_title, R.string.debug_settings_desc, R.drawable.ic_settings_outline)
+        // addToAdapter(R.string.sound_settings_title, R.string.sound_settings_desc, R.drawable.ic_sound)
+        // addToAdapter(R.string.env_settings_title, R.string.env_settings_desc, R.drawable.ic_globe)
     }
 
     private fun addToAdapter(titleId: Int, descriptionId: Int, icon: Int) {

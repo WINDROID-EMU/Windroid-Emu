@@ -34,18 +34,16 @@ class SettingsFragment : Fragment() {
 
         settingsList.clear()
 
-        addToAdapter(R.string.general_settings, R.string.settings_desc, R.drawable.ic_settings_outline)
-        addToAdapter(R.string.controller_mapper_title, R.string.controller_mapper_desc, R.drawable.ic_joystick)
-        addToAdapter(R.string.virtual_controller_mapper_title, R.string.controller_virtual_mapper_desc, R.drawable.ic_joystick)
-
+        addToAdapter(R.string.debug_settings_title, R.string.debug_settings_desc, R.drawable.ic_log)
+        addToAdapter(R.string.sound_settings_title, R.string.sound_settings_desc, R.drawable.ic_sound)
+        addToAdapter(R.string.env_settings_title, R.string.env_settings_desc, R.drawable.ic_globe)
+        addToAdapter(R.string.controls_settings_title, R.string.controls_settings_desc, R.drawable.ic_joystick)
+        addToAdapter(R.string.wine_settings_group_title, R.string.wine_settings_group_desc, R.drawable.ic_wine)
+        addToAdapter(R.string.drivers_settings_group_title, R.string.drivers_settings_group_desc, R.drawable.ic_gpu)
         if (deviceArch != "x86_64") {
             addToAdapter(R.string.box64_preset_manager_title, R.string.box64_preset_manager_desc, R.drawable.ic_box64)
         }
-
-        addToAdapter(R.string.wine_prefix_manager_title, R.string.wine_prefix_manager_desc, R.drawable.ic_wine)
-        addToAdapter(R.string.rat_manager_title, R.string.rat_manager_desc, R.drawable.ic_rat_package_grayscale)
-        addToAdapter(R.string.rat_downloader_title, R.string.rat_downloader_desc, R.drawable.ic_download)
-        addToAdapter(R.string.controller_view_title, R.string.controller_view_desc, R.drawable.ic_joystick)
+        addToAdapter(R.string.rat_packages_settings_title, R.string.rat_packages_settings_desc, R.drawable.ic_rat_package_grayscale)
     }
 
     private fun addToAdapter(titleId: Int, descriptionId: Int, icon: Int) {

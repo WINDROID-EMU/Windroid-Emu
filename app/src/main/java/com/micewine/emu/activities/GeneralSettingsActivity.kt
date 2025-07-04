@@ -81,10 +81,39 @@ class GeneralSettingsActivity : AppCompatActivity() {
         binding = ActivityGeneralSettingsBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
 
-        fragmentLoader(GeneralSettingsFragment(), true)
-
-        generalSettingsToolbar = findViewById(R.id.generalSettingsToolbar)
-        generalSettingsToolbar?.title = this.resources.getString(R.string.general_settings)
+        val openFragment = intent.getStringExtra("openFragment")
+        when (openFragment) {
+            "drivers" -> {
+                generalSettingsToolbar = findViewById(R.id.generalSettingsToolbar)
+                generalSettingsToolbar?.title = getString(R.string.driver_settings_title)
+                fragmentLoader(driversSettingsFragment, true)
+            }
+            "driver_info" -> {
+                generalSettingsToolbar = findViewById(R.id.generalSettingsToolbar)
+                generalSettingsToolbar?.title = getString(R.string.driver_info_title)
+                fragmentLoader(driverInfoFragment, true)
+            }
+            "debug" -> {
+                generalSettingsToolbar = findViewById(R.id.generalSettingsToolbar)
+                generalSettingsToolbar?.title = getString(R.string.debug_settings_title)
+                fragmentLoader(debugSettingsFragment, true)
+            }
+            "sound" -> {
+                generalSettingsToolbar = findViewById(R.id.generalSettingsToolbar)
+                generalSettingsToolbar?.title = getString(R.string.sound_settings_title)
+                fragmentLoader(soundSettingsFragment, true)
+            }
+            "env" -> {
+                generalSettingsToolbar = findViewById(R.id.generalSettingsToolbar)
+                generalSettingsToolbar?.title = getString(R.string.env_settings_title)
+                fragmentLoader(environmentVariablesSettings, true)
+            }
+            else -> {
+                fragmentLoader(GeneralSettingsFragment(), true)
+                generalSettingsToolbar = findViewById(R.id.generalSettingsToolbar)
+                generalSettingsToolbar?.title = this.resources.getString(R.string.general_settings)
+            }
+        }
 
         backButton = findViewById(R.id.backButton)
         backButton?.setOnClickListener {

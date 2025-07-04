@@ -99,5 +99,20 @@
             android:theme="@style/Theme.MiceWine.FullScreen"
             android:windowSoftInputMode="stateHidden">
         </activity>
+        <activity
+            android:name=".activities.ControlsSettingsActivity"
+            android:theme="@style/Theme.MiceWine" />
+        <activity
+            android:name=".activities.WineSettingsGroupActivity"
+            android:theme="@style/Theme.MiceWine" />
+        <activity
+            android:name=".activities.WineSettingsActivity"
+            android:theme="@style/Theme.MiceWine" />
+        <activity
+            android:name=".activities.DriversSettingsGroupActivity"
+            android:theme="@style/Theme.MiceWine" />
+        <activity
+            android:name=".activities.RatPackagesSettingsActivity"
+            android:theme="@style/Theme.MiceWine" />
     </application>
 </manifest>
