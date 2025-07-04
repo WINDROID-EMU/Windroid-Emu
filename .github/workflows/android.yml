@@ -62,7 +62,7 @@ jobs:
           echo "VERSION_CHANGED=0" >> $GITHUB_ENV
         fi
 
-    - name: "Create Release"
+    - name: "Create Release on GitHub"
       if: env.VERSION_CHANGED == '1' && github.event_name != 'pull_request'
       uses: softprops/action-gh-release@v2
       with:
@@ -71,8 +71,10 @@ jobs:
         prerelease: false
         overwrite: true
         files: ./app-debug.apk
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: "Upload Artifact"
+    - name: "Upload Artifact if not release"
       if: env.VERSION_CHANGED == '0' || github.event_name == 'pull_request'
       uses: actions/upload-artifact@v4
       with:
