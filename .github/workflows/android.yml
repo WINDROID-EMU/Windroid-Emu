@@ -10,8 +10,10 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Adicionado para garantir permissão de escrita para criar releases
+      pull-requests: write # Adicionado para permitir que o workflow interaja com pull requests, se necessário (boa prática)
 
     steps:
     - name: "Clone repository"
@@ -42,9 +44,18 @@ jobs:
         echo "${{ secrets.KEYSTORE_BASE64_MICEWINE }}" | base64 -d > micewine-key.jks
     
     - name: "Sign APK (Debug)"
+      if: github.event_name != 'pull_request' # Adicionado if para garantir que a assinatura só ocorra em pushes
       run: |
-        $ANDROID_HOME/build-tools/34.0.0/apksigner sign --ks micewine-key.jks --ks-key-alias ${{ secrets.KEYSTORE_ALIAS }} --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} --out app-debug.apk app/build/outputs/apk/debug/app-debug.apk || cp app/build/outputs/apk/debug/app-debug.apk .
-
+        # O apksigner gera o APK assinado no diretório de saída do Gradle
+        $ANDROID_HOME/build-tools/34.0.0/apksigner sign \
+          --ks micewine-key.jks \
+          --ks-key-alias ${{ secrets.KEYSTORE_ALIAS }} \
+          --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
+          --out app/build/outputs/apk/debug/app-debug-signed.apk \
+          app/build/outputs/apk/debug/app-debug.apk
+        # Renomeia o APK assinado para o nome original para consistência
+        mv app/build/outputs/apk/debug/app-debug-signed.apk app/build/outputs/apk/debug/app-debug.apk
+      
     - name: "Get Short SHA"
       run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
@@ -52,7 +63,13 @@ jobs:
       run: echo "VERSION=$(echo $(cat app/build.gradle.kts | grep versionName | cut -d "=" -f 2 | sed "s/\"//g"))" >> $GITHUB_ENV
       
     - name: "Check If It's New Release"
-      run: if [ -n "$(git diff HEAD~1 HEAD app/build.gradle.kts | grep versionName)" ]; then echo "VERSION_CHANGED=1" >> $GITHUB_ENV; else echo "VERSION_CHANGED=0" >> $GITHUB_ENV; fi
+      run: |
+        # Verifica se o versionName mudou no último commit
+        if [ -n "$(git diff HEAD~1 HEAD app/build.gradle.kts | grep versionName)" ]; then
+          echo "VERSION_CHANGED=1" >> $GITHUB_ENV
+        else
+          echo "VERSION_CHANGED=0" >> $GITHUB_ENV
+        fi
           
     - name: "Create Release"
       if: env.VERSION_CHANGED == '1' && github.event_name != 'pull_request'
@@ -61,11 +78,11 @@ jobs:
         name: "MiceWine Application (${{ env.VERSION }})"
         tag_name: ${{ env.SHORT_SHA }}
         prerelease: false
-        files: ./app-debug.apk
-    
+        files: app/build/outputs/apk/debug/app-debug.apk # Caminho direto para o APK gerado
+
     - name: "Upload Artifact"
       if: env.VERSION_CHANGED == '0' || github.event_name == 'pull_request'
       uses: actions/upload-artifact@v4
       with:
         name: MiceWine-Application-(git-${{ env.SHORT_SHA }})
-        path: ./app-debug.apk
+        path: app/build/outputs/apk/debug/app-debug.apk # Caminho direto para o APK gerado
