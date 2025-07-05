@@ -1,5 +1,6 @@
 package com.micewine.emu.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.android.material.button.MaterialButton
@@ -42,12 +44,33 @@ class LogViewerFragment : Fragment() {
         scrollView?.fullScroll(ScrollView.FOCUS_DOWN)
 
         exportLogButton?.setOnClickListener {
-            val logFile = File("/storage/emulated/0/MiceWine/MiceWine-$selectedGameName-Log-${System.currentTimeMillis() / 1000}.txt")
-
-            logFile.writeText(logTextView?.text.toString())
-
-            exportLogButton?.post {
-                Toast.makeText(context, "Log Exported to ${logFile.path}", Toast.LENGTH_SHORT).show()
+            val logContent = logTextView?.text.toString()
+            
+            if (logContent.isNotEmpty()) {
+                // Create a temporary file to share
+                val logFile = File(requireContext().cacheDir, "Windroid-$selectedGameName-Log-${System.currentTimeMillis() / 1000}.txt")
+                logFile.writeText(logContent)
+                
+                // Create sharing intent
+                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_SUBJECT, "Windroid Log - $selectedGameName")
+                    putExtra(Intent.EXTRA_TEXT, logContent)
+                    
+                    // Also attach the file
+                    val fileUri = FileProvider.getUriForFile(
+                        requireContext(),
+                        "${requireContext().packageName}.fileprovider",
+                        logFile
+                    )
+                    putExtra(Intent.EXTRA_STREAM, fileUri)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                
+                // Start sharing activity
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_log)))
+            } else {
+                Toast.makeText(context, getString(R.string.no_log_content), Toast.LENGTH_SHORT).show()
             }
         }
 

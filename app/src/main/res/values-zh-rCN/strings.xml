@@ -205,6 +205,8 @@
     <string name="selected_box64">已选择 Box64</string>
     <string name="install">安装</string>
     <string name="export_log">导出日志</string>
+    <string name="share_log">分享日志</string>
+    <string name="no_log_content">没有日志内容可分享</string>
     <string name="controller_view_title">测试控制器</string>
     <string name="exe_path">可执行文件路径</string>
     <string name="controller_mapping_type">控制器映射类型</string>

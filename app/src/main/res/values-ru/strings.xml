@@ -201,6 +201,8 @@
     <string name="selected_box64">Выбран Box64</string>
     <string name="install">Установить</string>
     <string name="export_log">Экспорт лога</string>
+    <string name="share_log">Поделиться логом</string>
+    <string name="no_log_content">Нет содержимого лога для обмена</string>
     <string name="controller_view_title">Тест контроллеров</string>
     <string name="exe_path">Путь к исполняемому файлу</string>
     <string name="controller_mapping_type">Тип раскладки контроллера</string>

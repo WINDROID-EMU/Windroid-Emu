@@ -14,9 +14,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.ContextMenu
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -84,8 +82,6 @@ class ShortcutsFragment : Fragment() {
         setAdapter()
         setupDragAndDrop()
 
-        registerForContextMenu(recyclerView!!)
-
         overflowMenuButton?.setOnClickListener {
             val popup = PopupMenu(requireContext(), overflowMenuButton!!)
             popup.menuInflater.inflate(R.menu.toolbar_menu, popup.menu)
@@ -125,8 +121,6 @@ class ShortcutsFragment : Fragment() {
             ): Boolean {
                 if (target.adapterPosition == 0 || viewHolder.adapterPosition == 0) return false
 
-                requireActivity().closeContextMenu()
-
                 val fromPosition = viewHolder.adapterPosition
                 val toPosition = target.adapterPosition
 
@@ -151,42 +145,7 @@ class ShortcutsFragment : Fragment() {
         itemTouchHelper?.attachToRecyclerView(recyclerView)
     }
 
-    override fun onCreateContextMenu(
-        menu: ContextMenu,
-        v: View,
-        menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
-        super.onCreateContextMenu(menu, v, menuInfo)
 
-        if (selectedGameName == getString(R.string.desktop_mode_init)) {
-            requireActivity().menuInflater.inflate(R.menu.game_list_context_menu_lite, menu)
-        } else {
-            requireActivity().menuInflater.inflate(R.menu.game_list_context_menu, menu)
-        }
-
-        val index = gameList.indexOfFirst { it.name == selectedGameName }
-        if (index == 0) return
-
-        val viewHolder = recyclerView?.findViewHolderForAdapterPosition(gameList.indexOfFirst { it.name == selectedGameName }) ?: return
-
-        itemTouchHelper?.startDrag(viewHolder)
-    }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.addToLauncher -> {
-                addGameToLauncher(requireContext(), selectedGameName)
-            }
-            R.id.removeGameItem -> {
-                DeleteItemFragment(DELETE_GAME_ITEM).show(requireActivity().supportFragmentManager, "")
-            }
-            R.id.editGameItem -> {
-                EditGamePreferencesFragment(EDIT_GAME_PREFERENCES).show(requireActivity().supportFragmentManager, "")
-            }
-        }
-
-        return super.onContextItemSelected(item)
-    }
 
     class GridSpacingItemDecoration(private val spacing: Int) : RecyclerView.ItemDecoration() {
         override fun getItemOffsets(

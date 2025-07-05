@@ -205,6 +205,8 @@
     <string name="selected_box64">Box64 Selecionado</string>
     <string name="install">Instalar</string>
     <string name="export_log">Exportar Log</string>
+    <string name="share_log">Compartilhar Log</string>
+    <string name="no_log_content">Nenhum conteúdo de log para compartilhar</string>
     <string name="controller_view_title">Testar Controles</string>
     <string name="exe_path">Caminho do Executável</string>
     <string name="controller_mapping_type">Tipo do Mapeamento de Controle</string>

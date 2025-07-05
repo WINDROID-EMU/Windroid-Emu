@@ -268,11 +268,8 @@ class AdapterGame(
         }
 
         override fun onLongClick(v: View): Boolean {
-            val gameModel = gameList[adapterPosition]
-
-            selectedGameName = gameModel.name
-
-            return false
+            // Long press functionality removed - no context menu
+            return true
         }
     }
 

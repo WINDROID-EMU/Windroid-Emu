@@ -39,7 +39,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/exportLogButton"
-            android:text="@string/export_log"
+            android:text="@string/share_log"
             android:textSize="15sp"
             android:layout_width="0dp"
             android:layout_weight="1"
