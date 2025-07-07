@@ -24,6 +24,7 @@ class ControlsSettingsActivity : AppCompatActivity() {
         settingsList.add(SettingsList(getString(R.string.controller_mapper_title), getString(R.string.controller_mapper_desc), R.drawable.ic_joystick))
         settingsList.add(SettingsList(getString(R.string.virtual_controller_mapper_title), getString(R.string.controller_virtual_mapper_desc), R.drawable.ic_joystick))
         settingsList.add(SettingsList(getString(R.string.controller_view_title), getString(R.string.controller_view_desc), R.drawable.ic_joystick))
+        settingsList.add(SettingsList(getString(R.string.xinput_layout_editor_title), getString(R.string.xinput_layout_editor_desc), R.drawable.ic_joystick))
 
         recyclerView.adapter = AdapterSettings(settingsList, this@ControlsSettingsActivity)
 

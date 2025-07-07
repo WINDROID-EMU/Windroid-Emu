@@ -198,6 +198,7 @@
     <string name="box64_preset_manager_title">Box64 Settings</string>
     <string name="box64_preset_manager_desc">Manage Box64 Settings</string>
     <string name="selected_box64_profile">Selected Box64 Profile</string>
+    <string name="edit_controls">Edit Controls</string>
     <string name="selected_virtual_controller_profile">Selected Virtual Controller Profile</string>
     <string name="selected_controller_profile">Selected Controller Profile</string>
     <string name="export_preset">Export Preset</string>
@@ -255,4 +256,8 @@
     <string name="drivers_settings_group_desc">Configurações e informações de vídeo</string>
     <string name="rat_packages_settings_title">Configurações de Pacotes</string>
     <string name="rat_packages_settings_desc">Gerenciar e baixar pacotes RAT</string>
+    <string name="xinput_layout_editor_title">Mapeador do Controle Xinput</string>
+    <string name="xinput_layout_editor_desc">Personalize posição, tamanho e opacidade dos botões do controle XInput</string>
+    <string name="save_layout">Salvar Layout</string>
+    <string name="reset_to_default">Restaurar Padrão</string>
 </resources>

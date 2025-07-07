@@ -34,7 +34,9 @@ class SettingsFragment : Fragment() {
 
         settingsList.clear()
 
-        addToAdapter(R.string.debug_settings_title, R.string.debug_settings_desc, R.drawable.ic_log)
+        addToAdapter(R.string.debug_settings_title, R.string.debug_settings_desc,
+            R.drawable.ic_debug
+        )
         addToAdapter(R.string.sound_settings_title, R.string.sound_settings_desc, R.drawable.ic_sound)
         addToAdapter(R.string.env_settings_title, R.string.env_settings_desc, R.drawable.ic_globe)
         addToAdapter(R.string.controls_settings_title, R.string.controls_settings_desc, R.drawable.ic_joystick)

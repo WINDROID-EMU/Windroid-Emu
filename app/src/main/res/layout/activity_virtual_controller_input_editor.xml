@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/virtualControllerEditorDrawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darker_gray"
+    android:theme="@style/Theme.MiceWine.FullScreen">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/darker_gray">
+
+        <com.micewine.emu.views.VirtualControllerInputEditorView
+            android:id="@+id/editorView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/darker_gray" />
+
+        <!-- Botão de editar na parte superior central -->
+        <ImageButton
+            android:id="@+id/editButton"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/edit_controls"
+            android:elevation="8dp"
+            android:src="@drawable/ic_edit" />
+
+    </RelativeLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/virtualControllerEditorNavigationView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@drawable/menu_bg"
+        app:itemTextColor="@color/black"
+        app:itemIconTint="@color/black"
+        app:menu="@menu/virtual_controller_input_editor_drawer" />
+
+</androidx.drawerlayout.widget.DrawerLayout> 

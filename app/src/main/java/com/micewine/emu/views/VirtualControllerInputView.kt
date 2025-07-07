@@ -30,6 +30,7 @@ import com.micewine.emu.views.VirtualKeyboardInputView.Companion.SHAPE_RECTANGLE
 import com.micewine.emu.views.VirtualKeyboardInputView.Companion.SHAPE_SQUARE
 import com.micewine.emu.views.VirtualKeyboardInputView.Companion.detectClick
 import kotlin.math.sqrt
+import com.micewine.emu.utils.XInputLayoutPreferences
 
 class VirtualControllerInputView @JvmOverloads constructor(
     context: Context,
@@ -57,9 +58,12 @@ class VirtualControllerInputView @JvmOverloads constructor(
     private val startButton: Path = Path()
     private val selectButton: Path = Path()
     private val buttonList: MutableList<VirtualControllerButton> = mutableListOf()
-    private val dpad: VirtualXInputDPad
-    private val leftAnalog: VirtualXInputAnalog
-    private val rightTouchPad: VirtualXInputTouchPad
+    private var dpad: VirtualXInputDPad = VirtualXInputDPad(0, 640F, 480F, 250F)
+    private var leftAnalog: VirtualXInputAnalog = VirtualXInputAnalog(LEFT_ANALOG, 280F, 840F, 275F, false, 0, 0F, 0F)
+    private var rightTouchPad: VirtualXInputTouchPad = VirtualXInputTouchPad(0, 1750F, 480F, 275F, false, 0, 0F, 0F)
+
+    // Utilitário para preferências
+    private val preferences = XInputLayoutPreferences(context)
 
     private fun adjustButtons() {
         val nativeResolution = getNativeResolution(context)
@@ -94,6 +98,81 @@ class VirtualControllerInputView @JvmOverloads constructor(
     }
 
     init {
+        loadLayoutConfiguration()
+    }
+
+    private fun loadLayoutConfiguration() {
+        // Tentar carregar configurações salvas primeiro
+        val savedButtons = preferences.loadButtons()
+        val savedAnalogs = preferences.loadAnalogs()
+        val savedDPads = preferences.loadDPads()
+
+        if (savedButtons.isNotEmpty() && savedAnalogs.isNotEmpty() && savedDPads.isNotEmpty()) {
+            // Carregar configurações salvas
+            loadSavedLayout(savedButtons, savedAnalogs, savedDPads)
+        } else {
+            // Carregar configurações padrão
+            loadDefaultLayout()
+        }
+    }
+
+    private fun loadSavedLayout(
+        savedButtons: List<VirtualControllerInputEditorView.EditableButton>,
+        savedAnalogs: List<VirtualControllerInputEditorView.EditableAnalog>,
+        savedDPads: List<VirtualControllerInputEditorView.EditableDPad>
+    ) {
+        // Carregar botões salvos
+        buttonList.clear()
+        savedButtons.forEach { savedButton ->
+            addButton(savedButton.id, savedButton.x, savedButton.y, savedButton.radius, savedButton.shape)
+        }
+
+        // Carregar analógicos salvos
+        val leftAnalogData = savedAnalogs.find { it.id == VirtualControllerInputView.LEFT_ANALOG }
+        val rightTouchPadData = savedAnalogs.find { it.id == 0 } // Touchpad
+
+        leftAnalog = if (leftAnalogData != null) {
+            VirtualXInputAnalog(
+                leftAnalogData.id,
+                leftAnalogData.x,
+                leftAnalogData.y,
+                leftAnalogData.radius,
+                false,
+                0,
+                0F,
+                0F
+            )
+        } else {
+            VirtualXInputAnalog(LEFT_ANALOG, 280F, 840F, 275F, false, 0, 0F, 0F)
+        }
+
+        rightTouchPad = if (rightTouchPadData != null) {
+            VirtualXInputTouchPad(
+                rightTouchPadData.id,
+                rightTouchPadData.x,
+                rightTouchPadData.y,
+                rightTouchPadData.radius,
+                false,
+                0,
+                0F,
+                0F
+            )
+        } else {
+            VirtualXInputTouchPad(0, 1750F, 480F, 275F, false, 0, 0F, 0F)
+        }
+
+        // Carregar D-pad salvo
+        val dpadData = savedDPads.firstOrNull()
+        dpad = if (dpadData != null) {
+            VirtualXInputDPad(dpadData.id, dpadData.x, dpadData.y, dpadData.radius)
+        } else {
+            VirtualXInputDPad(0, 640F, 480F, 250F)
+        }
+
+        adjustButtons()
+    }
+
+    private fun loadDefaultLayout() {
         addButton(A_BUTTON, 2065F, 910F, 180F, SHAPE_CIRCLE)
         addButton(B_BUTTON, 2205F, 735F, 180F, SHAPE_CIRCLE)
         addButton(X_BUTTON, 1925F, 735F, 180F, SHAPE_CIRCLE)

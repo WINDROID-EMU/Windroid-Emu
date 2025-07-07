@@ -11,20 +11,33 @@
 
     <color name="textColor">#000000</color>
 
-    <style name="Base.Theme.MiceWine.FullScreen" parent="Theme.Material3.DynamicColors.Light.NoActionBar">
-        <item name="android:statusBarColor">@android:color/darker_gray</item>
-        <item name="android:colorBackground">#FFFFFF</item>
-        <item name="colorSurface">#FFFFFF</item>
-        <item name="colorOnBackground">#000000</item>
-        <item name="colorOnSurface">#000000</item>
-        <item name="colorPrimary">#FFFFFF</item>
-        <item name="colorOnPrimary">#000000</item>
+    <style name="Base.Theme.MiceWine.FullScreen" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:colorBackground">@color/darker_gray</item>
+        <item name="colorSurface">@color/darker_gray</item>
+        <item name="colorOnBackground">#FFFFFF</item>
+        <item name="colorOnSurface">#FFFFFF</item>
+        <item name="colorPrimary">@color/darker_gray</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
 
-        <item name="colorPrimaryContainer">#FFFFFF</item>
-        <item name="colorOnPrimaryContainer">#000000</item>
+        <item name="colorPrimaryContainer">@color/darker_gray</item>
+        <item name="colorOnPrimaryContainer">#FFFFFF</item>
         <item name="popupMenuBackground">@drawable/menu_bg</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        
+        <!-- Cores específicas para NavigationView -->
+        <item name="navigationViewStyle">@style/Widget.MiceWine.NavigationView</item>
+    </style>
+    
+    <style name="Widget.MiceWine.NavigationView" parent="Widget.Material3.NavigationView">
+        <item name="itemTextColor">@color/black</item>
+        <item name="itemIconTint">@color/black</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
     </style>
 
     <style name="Theme.MiceWine" parent="Base.Theme.MiceWine" />

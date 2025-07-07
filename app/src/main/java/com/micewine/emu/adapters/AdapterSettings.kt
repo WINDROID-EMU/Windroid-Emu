@@ -19,6 +19,7 @@ import com.micewine.emu.fragments.CreatePresetFragment.Companion.BOX64_PRESET
 import com.micewine.emu.fragments.CreatePresetFragment.Companion.CONTROLLER_PRESET
 import com.micewine.emu.fragments.CreatePresetFragment.Companion.VIRTUAL_CONTROLLER_PRESET
 import com.micewine.emu.fragments.CreatePresetFragment.Companion.WINE_PREFIX_PRESET
+import com.micewine.emu.activities.VirtualControllerInputEditorActivity
 
 class AdapterSettings(private val settingsList: List<SettingsList>, private val context: Context) :
     RecyclerView.Adapter<AdapterSettings.ViewHolder>() {
@@ -135,6 +136,10 @@ class AdapterSettings(private val settingsList: List<SettingsList>, private val 
                 context.getString(R.string.env_settings_title) -> {
                     val intent = Intent(context, GeneralSettingsActivity::class.java)
                     intent.putExtra("openFragment", "env")
+                    context.startActivity(intent)
+                }
+                context.getString(R.string.xinput_layout_editor_title) -> {
+                    val intent = Intent(context, VirtualControllerInputEditorActivity::class.java)
                     context.startActivity(intent)
                 }
                 else -> {

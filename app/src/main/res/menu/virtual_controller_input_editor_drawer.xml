@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/exitEditor"
+        android:icon="@drawable/ic_back"
+        android:title="@string/exit" />
+    <item
+        android:id="@+id/saveLayout"
+        android:icon="@drawable/ic_save"
+        android:title="@string/save_layout" />
+    <item
+        android:id="@+id/resetLayout"
+        android:icon="@drawable/ic_reset"
+        android:title="@string/reset_to_default" />
+</menu> 

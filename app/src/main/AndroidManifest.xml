@@ -114,6 +114,13 @@
         <activity
             android:name=".activities.RatPackagesSettingsActivity"
             android:theme="@style/Theme.MiceWine" />
+        <activity
+            android:name=".activities.VirtualControllerInputEditorActivity"
+            android:theme="@style/Theme.MiceWine.FullScreen"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape"
+            android:exported="false">
+        </activity>
         
         <provider
             android:name="androidx.core.content.FileProvider"
