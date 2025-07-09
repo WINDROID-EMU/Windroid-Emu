@@ -59,7 +59,7 @@ class DebugSettingsFragment : Fragment() {
 
         settingsList.clear()
 
-        addToAdapter(R.string.wine_log_level_title, R.string.wine_log_level_desc, arrayOf("disabled", "default"),
+        addToAdapter(R.string.wine_log_level_title, R.string.wine_log_level_desc, arrayOf("disabled", "default", "all"),
             SPINNER, WINE_LOG_LEVEL_DEFAULT_VALUE, WINE_LOG_LEVEL
         )
         if (deviceArch != "x86_64") {

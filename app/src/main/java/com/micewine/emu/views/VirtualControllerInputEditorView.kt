@@ -153,6 +153,7 @@ class VirtualControllerInputEditorView @JvmOverloads constructor(
         editableDPads.addAll(savedDPads)
 
         adjustForScreenResolution()
+        centerControlsOnScreen()
     }
 
     private fun loadDefaultControls() {
@@ -187,6 +188,7 @@ class VirtualControllerInputEditorView @JvmOverloads constructor(
         ))
 
         adjustForScreenResolution()
+        centerControlsOnScreen()
     }
 
     private fun adjustForScreenResolution() {
@@ -217,6 +219,42 @@ class VirtualControllerInputEditorView @JvmOverloads constructor(
         }
     }
 
+    private fun centerControlsOnScreen() {
+        // Junta todos os controles em uma lista
+        val allControls = mutableListOf<EditableControl>()
+        allControls.addAll(editableButtons)
+        allControls.addAll(editableAnalogs)
+        allControls.addAll(editableDPads)
+        if (allControls.isEmpty()) return
+
+        // Calcula o bounding box
+        val minX = allControls.minOf { it.x - it.radius / 2 }
+        val maxX = allControls.maxOf { it.x + it.radius / 2 }
+        val minY = allControls.minOf { it.y - it.radius / 2 }
+        val maxY = allControls.maxOf { it.y + it.radius / 2 }
+
+        val controlsCenterX = (minX + maxX) / 2f
+        val controlsCenterY = (minY + maxY) / 2f
+
+        // Centro da tela
+        val viewCenterX = width / 2f
+        val viewCenterY = height / 2f
+
+        // Deslocamento necessário
+        val dx = viewCenterX - controlsCenterX
+        val dy = viewCenterY - controlsCenterY
+
+        // Aplica deslocamento
+        editableButtons.forEach { it.x += dx; it.y += dy }
+        editableAnalogs.forEach { it.x += dx; it.y += dy }
+        editableDPads.forEach { it.x += dx; it.y += dy }
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        centerControlsOnScreen()
+    }
+
     private fun getButtonName(id: Int): String {
         return when (id) {
             VirtualControllerInputView.A_BUTTON -> "A"
@@ -240,6 +278,14 @@ class VirtualControllerInputEditorView @JvmOverloads constructor(
         paint.strokeWidth = 16F
 
         canvas.drawPath(path, paint)
+    }
+
+    // Função para ajustar o tamanho do texto dinamicamente
+    private fun adjustTextSize(text: String, maxWidth: Float, paint: Paint, radius: Float) {
+        paint.textSize = radius / 6F
+        while (paint.measureText(text) > maxWidth - (maxWidth / 5F)) {
+            paint.textSize--
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -272,9 +318,6 @@ class VirtualControllerInputEditorView @JvmOverloads constructor(
             paint.alpha = button.alpha
             paint.strokeWidth = 16F
             textPaint.alpha = button.alpha
-            textPaint.textSize = button.radius / 4
-
-            val offset = (textPaint.fontMetrics.ascent + textPaint.fontMetrics.descent) / 2
 
             when (button.shape) {
                 SHAPE_CIRCLE -> {
@@ -295,15 +338,15 @@ class VirtualControllerInputEditorView @JvmOverloads constructor(
 
             when (button.id) {
                 VirtualControllerInputView.START_BUTTON -> {
-                    paint.strokeWidth = 12F
+                    paint.strokeWidth = button.radius / 15F
                     startButton.apply {
                         reset()
                         moveTo(button.x - button.radius / 3, button.y - button.radius / 8)
-                        lineTo(button.x - button.radius / 3 + button.radius - button.radius / 3, button.y - button.radius / 8)
+                        lineTo(button.x - button.radius / 3 + button.radius / 3, button.y - button.radius / 8)
                         moveTo(button.x - button.radius / 3, button.y)
-                        lineTo(button.x - button.radius / 3 + button.radius - button.radius / 3, button.y)
+                        lineTo(button.x - button.radius / 3 + button.radius / 3, button.y)
                         moveTo(button.x - button.radius / 3, button.y + button.radius / 8)
-                        lineTo(button.x - button.radius / 3 + button.radius - button.radius / 3, button.y + button.radius / 8)
+                        lineTo(button.x - button.radius / 3 + button.radius / 3, button.y + button.radius / 8)
                         close()
                     }
                     paint.color = if (button.isSelected) Color.BLACK else Color.WHITE
@@ -311,24 +354,24 @@ class VirtualControllerInputEditorView @JvmOverloads constructor(
                     canvas.drawPath(startButton, paint)
                 }
                 VirtualControllerInputView.SELECT_BUTTON -> {
-                    paint.strokeWidth = 12F
+                    paint.strokeWidth = button.radius / 15F
                     selectButton.apply {
                         reset()
-                        moveTo(button.x - button.radius / 4 + 4F, button.y - button.radius / 4 + 40F)
-                        lineTo(button.x - button.radius / 4 + 4F, button.y - button.radius / 4)
-                        lineTo(button.x - button.radius / 4 + 4F + 40F, button.y - button.radius / 4)
-                        lineTo(button.x - button.radius / 4 + 4F + 40F, button.y - button.radius / 4 + 20F)
-                        lineTo(button.x - button.radius / 4 + 4F + 40F, button.y - button.radius / 4)
-                        lineTo(button.x - button.radius / 4 + 4F, button.y - button.radius / 4)
+                        moveTo(button.x - button.radius / 4 + button.radius / 20F, button.y - button.radius / 4 + button.radius / 3F)
+                        lineTo(button.x - button.radius / 4 + button.radius / 20F, button.y - button.radius / 4)
+                        lineTo(button.x - button.radius / 4 + button.radius / 20F + button.radius / 2F, button.y - button.radius / 4)
+                        lineTo(button.x - button.radius / 4 + button.radius / 20F + button.radius / 2F, button.y - button.radius / 4 + button.radius / 6F)
+                        lineTo(button.x - button.radius / 4 + button.radius / 20F + button.radius / 2F, button.y - button.radius / 4)
+                        lineTo(button.x - button.radius / 4 + button.radius / 20F, button.y - button.radius / 4)
                         close()
-                        moveTo(button.x - button.radius / 4 + 20F, button.y - button.radius / 4 + 30F)
-                        lineTo(button.x - button.radius / 4 + 60F, button.y - button.radius / 4 + 30F)
-                        lineTo(button.x - button.radius / 4 + 60F, button.y - button.radius / 4 + 70F)
-                        lineTo(button.x - button.radius / 4 + 20F, button.y - button.radius / 4 + 70F)
-                        lineTo(button.x - button.radius / 4 + 20F, button.y - button.radius / 4 + 24F)
-                        lineTo(button.x - button.radius / 4 + 20F, button.y - button.radius / 4 + 70F)
-                        lineTo(button.x - button.radius / 4 + 60F, button.y - button.radius / 4 + 70F)
-                        lineTo(button.x - button.radius / 4 + 60F, button.y - button.radius / 4 + 30F)
+                        moveTo(button.x - button.radius / 4 + button.radius / 3F, button.y - button.radius / 4 + button.radius / 2.5F)
+                        lineTo(button.x - button.radius / 4 + button.radius / 1.5F, button.y - button.radius / 4 + button.radius / 2.5F)
+                        lineTo(button.x - button.radius / 4 + button.radius / 1.5F, button.y - button.radius / 4 + button.radius / 1.2F)
+                        lineTo(button.x - button.radius / 4 + button.radius / 3F, button.y - button.radius / 4 + button.radius / 1.2F)
+                        lineTo(button.x - button.radius / 4 + button.radius / 3F, button.y - button.radius / 4 + button.radius / 2.8F)
+                        lineTo(button.x - button.radius / 4 + button.radius / 3F, button.y - button.radius / 4 + button.radius / 1.2F)
+                        lineTo(button.x - button.radius / 4 + button.radius / 1.5F, button.y - button.radius / 4 + button.radius / 1.2F)
+                        lineTo(button.x - button.radius / 4 + button.radius / 1.5F, button.y - button.radius / 4 + button.radius / 2.5F)
                         close()
                     }
                     paint.color = if (button.isSelected) Color.BLACK else Color.WHITE
@@ -336,7 +379,10 @@ class VirtualControllerInputEditorView @JvmOverloads constructor(
                     canvas.drawPath(selectButton, paint)
                 }
                 else -> {
-                    canvas.drawText(getButtonName(button.id), button.x, button.y - offset - 4, textPaint)
+                    val buttonName = getButtonName(button.id)
+                    adjustTextSize(buttonName, button.radius, textPaint, button.radius)
+                    val offset = (textPaint.fontMetrics.ascent + textPaint.fontMetrics.descent) / 2
+                    canvas.drawText(buttonName, button.x, button.y - offset - 4, textPaint)
                 }
             }
         }
@@ -364,7 +410,8 @@ class VirtualControllerInputEditorView @JvmOverloads constructor(
 
             // Desenhar nome do analógico
             textPaint.alpha = analog.alpha
-            textPaint.textSize = analog.radius / 4
+            
+            adjustTextSize(analog.name, analog.radius, textPaint, analog.radius)
             val offset = (textPaint.fontMetrics.ascent + textPaint.fontMetrics.descent) / 2
             canvas.drawText(analog.name, analog.x, analog.y - offset - 4, textPaint)
         }

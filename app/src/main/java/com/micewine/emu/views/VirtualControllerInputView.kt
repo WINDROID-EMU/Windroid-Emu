@@ -209,6 +209,14 @@ class VirtualControllerInputView @JvmOverloads constructor(
         }
     }
 
+    // Função para ajustar o tamanho do texto dinamicamente
+    private fun adjustTextSize(text: String, maxWidth: Float, paint: Paint, radius: Float) {
+        paint.textSize = radius / 6F
+        while (paint.measureText(text) > maxWidth - (maxWidth / 5F)) {
+            paint.textSize--
+        }
+    }
+
     private fun drawDPad(path: Path, pressed: Boolean, canvas: Canvas) {
         if (pressed) {
             paint.style = Paint.Style.FILL_AND_STROKE
@@ -236,10 +244,6 @@ class VirtualControllerInputView @JvmOverloads constructor(
             paint.strokeWidth = 16F
             textPaint.alpha = 200
 
-            paint.textSize = it.radius / 4
-
-            val offset = (textPaint.fontMetrics.ascent + textPaint.fontMetrics.descent) / 2
-
             when (it.shape) {
                 SHAPE_CIRCLE -> {
                     canvas.drawCircle(it.x, it.y, it.radius / 2, paint)
@@ -259,15 +263,23 @@ class VirtualControllerInputView @JvmOverloads constructor(
 
             when (it.id) {
                 START_BUTTON -> {
-                    paint.strokeWidth = 12F
+                    paint.strokeWidth = it.radius / 15F
                     startButton.apply {
                         reset()
-                        moveTo(it.x - it.radius / 3, it.y - it.radius / 8)
-                        lineTo(it.x - it.radius / 3 + it.radius - it.radius / 3, it.y - it.radius / 8)
-                        moveTo(it.x - it.radius / 3, it.y)
-                        lineTo(it.x - it.radius / 3 + it.radius - it.radius / 3, it.y)
-                        moveTo(it.x - it.radius / 3, it.y + it.radius / 8)
-                        lineTo(it.x - it.radius / 3 + it.radius - it.radius / 3, it.y + it.radius / 8)
+                        // Centralizar as três linhas horizontais
+                        val lineLength = it.radius * 0.5f
+                        val lineSpacing = it.radius * 0.18f
+                        val centerX = it.x
+                        val centerY = it.y
+                        // Linha superior
+                        moveTo(centerX - lineLength / 2, centerY - lineSpacing)
+                        lineTo(centerX + lineLength / 2, centerY - lineSpacing)
+                        // Linha do meio
+                        moveTo(centerX - lineLength / 2, centerY)
+                        lineTo(centerX + lineLength / 2, centerY)
+                        // Linha inferior
+                        moveTo(centerX - lineLength / 2, centerY + lineSpacing)
+                        lineTo(centerX + lineLength / 2, centerY + lineSpacing)
                         close()
                     }
                     paint.color = if (it.isPressed) Color.BLACK else Color.WHITE
@@ -276,34 +288,42 @@ class VirtualControllerInputView @JvmOverloads constructor(
                     canvas.drawPath(startButton, paint)
                 }
                 SELECT_BUTTON -> {
-                    paint.strokeWidth = 12F
+                    paint.strokeWidth = it.radius / 15F
                     selectButton.apply {
                         reset()
-                        moveTo(it.x - it.radius / 4 + 4F, it.y - it.radius / 4 + 40F)
-                        lineTo(it.x - it.radius / 4 + 4F, it.y - it.radius / 4)
-                        lineTo(it.x - it.radius / 4 + 4F + 40F, it.y - it.radius / 4)
-                        lineTo(it.x - it.radius / 4 + 4F + 40F, it.y - it.radius / 4 + 20F)
-                        lineTo(it.x - it.radius / 4 + 4F + 40F, it.y - it.radius / 4)
-                        lineTo(it.x - it.radius / 4 + 4F, it.y - it.radius / 4)
+                        // Centralizar um retângulo (símbolo de menu)
+                        val rectWidth = it.radius * 0.5f
+                        val rectHeight = it.radius * 0.22f
+                        val centerX = it.x
+                        val centerY = it.y
+                        // Retângulo principal
+                        moveTo(centerX - rectWidth / 2, centerY - rectHeight / 2)
+                        lineTo(centerX + rectWidth / 2, centerY - rectHeight / 2)
+                        lineTo(centerX + rectWidth / 2, centerY + rectHeight / 2)
+                        lineTo(centerX - rectWidth / 2, centerY + rectHeight / 2)
                         close()
-                        moveTo(it.x - it.radius / 4 + 20F, it.y - it.radius / 4 + 30F)
-                        lineTo(it.x - it.radius / 4 + 60F, it.y - it.radius / 4 + 30F)
-                        lineTo(it.x - it.radius / 4 + 60F, it.y - it.radius / 4 + 70F)
-                        lineTo(it.x - it.radius / 4 + 20F, it.y - it.radius / 4 + 70F)
-                        lineTo(it.x - it.radius / 4 + 20F, it.y - it.radius / 4 + 24F)
-                        lineTo(it.x - it.radius / 4 + 20F, it.y - it.radius / 4 + 70F)
-                        lineTo(it.x - it.radius / 4 + 60F, it.y - it.radius / 4 + 70F)
-                        lineTo(it.x - it.radius / 4 + 60F, it.y - it.radius / 4 + 30F)
-                        close()
+                        // Linha interna (menu)
+                        val innerLineY = centerY
+                        val innerLineLength = rectWidth * 0.7f
+                        moveTo(centerX - innerLineLength / 2, innerLineY)
+                        lineTo(centerX + innerLineLength / 2, innerLineY)
                     }
-
                     paint.color = if (it.isPressed) Color.BLACK else Color.WHITE
                     paint.alpha = 200
 
                     canvas.drawPath(selectButton, paint)
                 }
                 else -> {
-                    canvas.drawText(getButtonName(it.id), it.x, it.y - offset - 4, textPaint)
+                    val buttonName = getButtonName(it.id)
+                    adjustTextSize(buttonName, it.radius, textPaint, it.radius)
+                    val offset = (textPaint.fontMetrics.ascent + textPaint.fontMetrics.descent) / 2
+                    // Deixar as letras dos botões A, B, X, Y em negrito
+                    if (it.id == A_BUTTON || it.id == B_BUTTON || it.id == X_BUTTON || it.id == Y_BUTTON) {
+                        textPaint.typeface = android.graphics.Typeface.create(textPaint.typeface, android.graphics.Typeface.BOLD)
+                    } else {
+                        textPaint.typeface = android.graphics.Typeface.create(textPaint.typeface, android.graphics.Typeface.NORMAL)
+                    }
+                    canvas.drawText(buttonName, it.x, it.y - offset - 4, textPaint)
                 }
             }
         }

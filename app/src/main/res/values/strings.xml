@@ -260,4 +260,5 @@
     <string name="xinput_layout_editor_desc">Personalize posição, tamanho e opacidade dos botões do controle XInput</string>
     <string name="save_layout">Salvar Layout</string>
     <string name="reset_to_default">Restaurar Padrão</string>
+    <string name="wine_log_level_all">All (Detalhado)</string>
 </resources>

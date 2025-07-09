@@ -144,6 +144,8 @@ object EnvVars {
 
         if (wineLogLevel == "disabled") {
             vars.add("WINEDEBUG=-all")
+        } else if (wineLogLevel == "all") {
+            vars.add("WINEDEBUG=+all")
         }
 
         vars.add("WINE_Z_DISK=$appRootDir")
