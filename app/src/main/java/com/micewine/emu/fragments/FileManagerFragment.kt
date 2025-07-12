@@ -11,8 +11,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -52,6 +54,8 @@ class FileManagerFragment : Fragment() {
     private var binding: FragmentFileManagerBinding? = null
     private var currentFolderText: TextView? = null
     private var rootView: View? = null
+    private var backButton: ImageButton? = null
+    private var fileManagerToolbar: Toolbar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,6 +64,15 @@ class FileManagerFragment : Fragment() {
     ): View? {
         binding = FragmentFileManagerBinding.inflate(inflater, container, false)
         rootView = binding!!.root
+
+        // Configurar toolbar e botão de voltar
+        fileManagerToolbar = rootView?.findViewById(R.id.fileManagerToolbar)
+        fileManagerToolbar?.title = getString(R.string.file_manager_title)
+
+        backButton = rootView?.findViewById(R.id.backButton)
+        backButton?.setOnClickListener {
+            onBackPressed()
+        }
 
         recyclerView = rootView?.findViewById(R.id.recyclerViewFiles)
         recyclerView?.adapter = AdapterFiles(fileList, requireContext(), false)
@@ -78,6 +91,12 @@ class FileManagerFragment : Fragment() {
         fragmentInstance = this
 
         return rootView
+    }
+
+    private fun onBackPressed() {
+        // Como este fragment está dentro do ViewPager da MainActivity,
+        // vamos navegar para a tela inicial (ShortcutsFragment)
+        (activity as? com.micewine.emu.activities.MainActivity)?.switchToFragment(0)
     }
 
     override fun onCreateContextMenu(

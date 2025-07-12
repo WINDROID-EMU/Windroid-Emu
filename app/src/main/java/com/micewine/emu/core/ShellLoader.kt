@@ -92,11 +92,16 @@ object ShellLoader {
     }
 
     class ViewModelAppLogs(private val supportFragmentManager: FragmentManager) : ViewModel() {
-        val logsTextHead = MutableLiveData<String>()
+        private val logsBuffer = StringBuilder()
+        private val _logsTextHead = MutableLiveData<String>()
+        val logsTextHead: MutableLiveData<String> = _logsTextHead
 
         fun appendText(text: String) {
             handler.post {
-                logsTextHead.value = "$text\n"
+                synchronized(logsBuffer) {
+                    logsBuffer.append("$text\n")
+                    _logsTextHead.value = logsBuffer.toString()
+                }
 
                 // Check for errors
                 when {
@@ -127,6 +132,19 @@ object ShellLoader {
                         ).show(supportFragmentManager, "")
                     }
                 }
+            }
+        }
+
+        fun clearLogs() {
+            synchronized(logsBuffer) {
+                logsBuffer.clear()
+                _logsTextHead.value = ""
+            }
+        }
+
+        fun getLogsContent(): String {
+            return synchronized(logsBuffer) {
+                logsBuffer.toString()
             }
         }
     }

@@ -4,29 +4,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:theme="@style/Theme.MiceWine">
 
-    <TextView
-        android:id="@+id/currentFolder"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="12dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="16sp"
-        android:singleLine="true"
-        android:ellipsize="marquee"
-        android:scrollHorizontally="true"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:gravity="center_vertical">
-    </TextView>
+        android:layout_height="wrap_content">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewFiles"
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/exit"
+            android:src="@drawable/ic_back">
+        </ImageButton>
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fileManagerToolbar"
+            android:title="@string/file_manager_title"
+            android:titleTextColor="@color/white">
+        </androidx.appcompat.widget.Toolbar>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
-    </androidx.recyclerview.widget.RecyclerView>
+        android:padding="10dp"
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/currentFolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="12dp"
+            android:ellipsize="marquee"
+            android:gravity="center_vertical"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="16sp"
+            android:visibility="gone"></TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewFiles"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </LinearLayout>
 </LinearLayout>
